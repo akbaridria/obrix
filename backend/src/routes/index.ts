@@ -1,0 +1,27 @@
+import { Hono } from "hono";
+import { fetchPoolSwaps } from "../scripts/uniswap-v4.js";
+
+const routes = new Hono();
+
+// 0xdce6394339af00981949f5f3baf27e3610c76326a700af57e4b3e3ae4977f78d ETH/USDC
+// 0xb98437c7ba28c6590dd4e1cc46aa89eed181f97108e5b6221730d41347bc817f WBTC/USDC
+// 0x50ae33c238824aa1937d5d9f1766c487bca39b548f8d957994e8357eeeca3280 LINK/USDC
+// 0x9a5c1d2f4a7a7962a63259de6fcc1afb1d0aa1abdf5d19c23d22fd78953c5167 UNI/USDC
+// 0xcd0a9bc63323cd038128dfcb3a5f4f7a2946548e3ae437043fd4124218e170f0 DAI/USDC
+// 0x1ff1224be14c0e69c9e0a3da1c986fcbf48abe5365227700624bc39e9fdde81d 1inch/usdc
+// 0x2187d779d9b173dd7202b38b54dca6eb04d1b32ca261980869195b5b9fa97ef8 aave/usdc
+// 0xb3ec039dd452a0c23404fec0bcaf6a6e4e1111469f2bfe7b7b5f41a0e366c03c GHO/USDC
+
+routes.get("/", async (c) => {
+  const poolId =
+    "0xdce6394339af00981949f5f3baf27e3610c76326a700af57e4b3e3ae4977f78d";
+  const LAST_HOUR_TIMESTAMP = Math.floor(Date.now() / 1000) - (3600 * 2);
+  const res = await fetchPoolSwaps(poolId, LAST_HOUR_TIMESTAMP);
+  return c.json({
+    res,
+    timestamp: LAST_HOUR_TIMESTAMP,
+    date_string: new Date(LAST_HOUR_TIMESTAMP * 1000).toISOString(),
+  });
+});
+
+export default routes;
