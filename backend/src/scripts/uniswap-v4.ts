@@ -14,6 +14,7 @@ interface PoolSwapQueryResult {
 interface PoolInfo {
   id: string;
   tick: string;
+  totalValueLockedUSD: string;
   token0: {
     id: string;
     symbol: string;
@@ -260,8 +261,6 @@ async function fetchPoolSwaps(
   }
 
   const { data } = await response.json();
-
-  console.log(data, "<<< data from uniswap v4 subgraph");
 
   if (data.swaps?.length < 2) {
     return {
