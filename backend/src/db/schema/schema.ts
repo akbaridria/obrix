@@ -31,7 +31,8 @@ export const washTrade = pgTable("wash_trade", {
   id: serial("id").primaryKey(),
   wash_trading_probability: real("wash_trading_probability"),
   suspicious_addresses: jsonb("suspicious_addresses"),
-  affected_addresses: jsonb("affected_addresses"),
+  transaction_hashes: jsonb("transaction_hashes"),
+  key_drivers: jsonb("key_drivers"),
   confidence: varchar("confidence", { length: 8 }),
   pool_id: varchar("pool_id", { length: 64 }),
   token0_symbol: varchar("token0_symbol", { length: 32 }),
@@ -43,9 +44,10 @@ export const washTrade = pgTable("wash_trade", {
 
 export const pumpDump = pgTable("pump_dump", {
   id: serial("id").primaryKey(),
-  time_window: varchar("time_window", { length: 16 }),
+  pump_dump_probability: real("pump_dump_probability"),
+  suspicious_addresses: jsonb("suspicious_addresses"),
+  transaction_hashes: jsonb("transaction_hashes"),
   key_drivers: jsonb("key_drivers"),
-  affected_addresses: jsonb("affected_addresses"),
   confidence: varchar("confidence", { length: 8 }),
   pool_id: varchar("pool_id", { length: 64 }),
   token0_symbol: varchar("token0_symbol", { length: 32 }),

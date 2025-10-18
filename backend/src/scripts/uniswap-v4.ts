@@ -1,7 +1,7 @@
 import { SUBGRAPH_URL } from "../libs/constant.js";
 import type { MetricsResult } from "../types.js";
 
-interface PoolSwapQueryResult {
+export interface PoolSwapQueryResult {
   id: string;
   timestamp: string;
   sqrtPriceX96: string;
@@ -9,6 +9,22 @@ interface PoolSwapQueryResult {
   amount0: string;
   amount1: string;
   amountUSD: string;
+  transaction: {
+    id: string;
+    blockNumber: string;
+    timestamp: string;
+    transfers: {
+      id: string;
+      from: string;
+      to: string;
+      amount: string;
+      token: {
+        id: string;
+        symbol: string;
+        decimals: string;
+      };
+    }[];
+  };
 }
 
 interface PoolInfo {
@@ -229,10 +245,28 @@ async function fetchPoolSwaps(
       amount0
       amount1
       amountUSD
+    	origin
       transaction {
         id
         blockNumber
         timestamp
+        transfers(first: 10) {
+          id
+          from
+          to
+          tokenId
+          timestamp
+        }
+      }
+      token0 {
+        id
+        symbol
+        decimals
+      }
+      token1 {
+        id
+        symbol
+        decimals
       }
     }
     pool(id: $poolId) {

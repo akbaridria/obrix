@@ -38,9 +38,39 @@ class UniswapV4Worker {
   private async processor(job: Job<UniswapV4JobData>) {
     console.info(`Processing job ${job.id}, task name: ${job.name}`);
     const timestamp = Math.floor(Date.now() / 1000) - 7200; // 2 hour ago
-    const { isEmpty, data, meanReversion, twap, volatility } =
-      await fetchPoolSwaps(job.data.poolId, timestamp);
+    // calcualte metrics
+    const {
+      isEmpty,
+      data,
+      meanReversion,
+      twap,
+      volatility,
+      poolId,
+      token0Symbol,
+      token1Symbol,
+    } = await fetchPoolSwaps(job.data.poolId, timestamp);
     const metricsService = new MetricsService(new MetricsRepository());
+
+    // insert metrics to the database
+    // await metricsService.create({
+    //   chain: "ethereum",
+    //   protocol: "uniswap",
+    //   version: "v4",
+    //   pool_id: poolId,
+    //   is_empty: isEmpty,
+    //   meanReversion: String(meanReversion),
+    //   twap: String(twap),
+    //   volatility: String(volatility),
+    //   token0_symbol: token0Symbol,
+    //   token1_symbol: token1Symbol,
+    // });
+
+    // run agent
+    // const res = await runner.ask(
+    //   "Analyze the following swap data for wash trading and pump & dump risks: " +
+    //     JSON.stringify(data)
+    // );
+    // console.log(res);
   }
 }
 
