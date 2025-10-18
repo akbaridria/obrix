@@ -1,11 +1,14 @@
 import { type Job, Worker } from "bullmq";
 import { connection, QUEUE } from "../libs/queue.js";
+import { fetchPoolSwaps } from "../scripts/uniswap-v4.js";
+import { MetricsService } from "../services/metrics.js";
+import { MetricsRepository } from "../repository/metrics.js";
 
-interface JobData {
+interface UniswapV4JobData {
   poolId: string;
 }
 
-class WorkerService {
+class UniswapV4Worker {
   constructor() {}
 
   public setup() {
@@ -32,10 +35,13 @@ class WorkerService {
     return worker;
   }
 
-  private async processor(job: Job<JobData>) {
+  private async processor(job: Job<UniswapV4JobData>) {
     console.info(`Processing job ${job.id}, task name: ${job.name}`);
-    // Implement the actual job processing logic here
+    const timestamp = Math.floor(Date.now() / 1000) - 7200; // 2 hour ago
+    const { isEmpty, data, meanReversion, twap, volatility } =
+      await fetchPoolSwaps(job.data.poolId, timestamp);
+    const metricsService = new MetricsService(new MetricsRepository());
   }
 }
 
-export { WorkerService, type JobData };
+export { UniswapV4Worker, type UniswapV4JobData };

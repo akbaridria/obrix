@@ -14,7 +14,7 @@ export class MetricsRepository {
   }
 
   public async getAll({
-    limit = 10,
+    limit = 100,
     page = 1,
     protocol,
   }: { limit?: number; page?: number; protocol?: string } = {}) {

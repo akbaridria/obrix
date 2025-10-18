@@ -11,6 +11,7 @@
   },
   "dependencies": {
     "@hono/node-server": "^1.19.5",
+    "@iqai/adk": "^0.5.0",
     "@neondatabase/serverless": "^1.0.2",
     "bullmq": "^5.61.0",
     "dotenv": "^17.2.3",

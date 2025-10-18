@@ -213,7 +213,7 @@ function sqrtPriceX96ToPrice(
 async function fetchPoolSwaps(
   poolId: string,
   timestampGte: number
-): Promise<MetricsResult> {
+): Promise<MetricsResult<PoolSwapQueryResult[]>> {
   const SWAPS_QUERY = `
   query GetSwaps($poolId: ID!, $timestampGte: Int!) {
     swaps(
@@ -229,6 +229,11 @@ async function fetchPoolSwaps(
       amount0
       amount1
       amountUSD
+      transaction {
+        id
+        blockNumber
+        timestamp
+      }
     }
     pool(id: $poolId) {
       id
@@ -260,7 +265,7 @@ async function fetchPoolSwaps(
     throw new Error(`GraphQL error: ${response.statusText}`);
   }
 
-  const { data } = await response.json();
+  const { data }: { data: GraphQLResponse } = await response.json();
 
   if (data.swaps?.length < 2) {
     return {
@@ -268,6 +273,10 @@ async function fetchPoolSwaps(
       twap: 0,
       volatility: 0,
       meanReversion: 0,
+      data: data.swaps,
+      token0Symbol: data.pool.token0.symbol,
+      token1Symbol: data.pool.token1.symbol,
+      poolId: poolId,
     };
   }
 
@@ -277,6 +286,10 @@ async function fetchPoolSwaps(
     volatility: calculateVolatility(data.swaps, data.pool).volatility,
     meanReversion: calculateMeanReversionIndex(data.swaps, data.pool)
       .meanReversionIndex,
+    data: data.swaps,
+    token0Symbol: data.pool.token0.symbol,
+    token1Symbol: data.pool.token1.symbol,
+    poolId: poolId,
   };
 }
 
