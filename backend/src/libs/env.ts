@@ -8,6 +8,7 @@ const envSchema = z.object({
   REDIS_URL: z.string(),
   REDIS_DB: z.string(),
   GOOGLE_API_KEY: z.string(),
+  LLM_AGENT: z.string(),
 });
 
 export default envSchema.parse(process.env);

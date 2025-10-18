@@ -4,10 +4,10 @@ import { db, type NewWashTrade } from "../db/database.js";
 
 export class WashTradeRepository {
   public async create(_washTrade: NewWashTrade) {
-    return db.insert(washTrade).values(_washTrade).returning();
+    return db.insert(washTrade).values(_washTrade);
   }
 
-  public async findById(id: number) {
+  public async findById(id: string) {
     return db.query.washTrade.findMany({
       where: eq(washTrade.id, id),
     });

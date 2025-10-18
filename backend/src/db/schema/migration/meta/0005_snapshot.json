@@ -1,0 +1,292 @@
+{
+  "id": "2fa0b770-9ccd-4188-bcd9-383848ac3df2",
+  "prevId": "c3b7d346-1df9-406f-b6ea-ff7993a7343f",
+  "version": "7",
+  "dialect": "postgresql",
+  "tables": {
+    "public.metrics": {
+      "name": "metrics",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "protocol": {
+          "name": "protocol",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "chain": {
+          "name": "chain",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "twap": {
+          "name": "twap",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "volatility": {
+          "name": "volatility",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "mean_reversion": {
+          "name": "mean_reversion",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "is_empty": {
+          "name": "is_empty",
+          "type": "boolean",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        },
+        "pool_id": {
+          "name": "pool_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "token0_symbol": {
+          "name": "token0_symbol",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "token1_symbol": {
+          "name": "token1_symbol",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.pump_dump": {
+      "name": "pump_dump",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "pump_dump_probability": {
+          "name": "pump_dump_probability",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "suspicious_addresses": {
+          "name": "suspicious_addresses",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "transaction_hashes": {
+          "name": "transaction_hashes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "key_drivers": {
+          "name": "key_drivers",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "confidence": {
+          "name": "confidence",
+          "type": "varchar(8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pool_id": {
+          "name": "pool_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "token0_symbol": {
+          "name": "token0_symbol",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "token1_symbol": {
+          "name": "token1_symbol",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "protocol": {
+          "name": "protocol",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "network": {
+          "name": "network",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    },
+    "public.wash_trade": {
+      "name": "wash_trade",
+      "schema": "",
+      "columns": {
+        "id": {
+          "name": "id",
+          "type": "uuid",
+          "primaryKey": true,
+          "notNull": true,
+          "default": "gen_random_uuid()"
+        },
+        "wash_trading_probability": {
+          "name": "wash_trading_probability",
+          "type": "real",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "suspicious_addresses": {
+          "name": "suspicious_addresses",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "transaction_hashes": {
+          "name": "transaction_hashes",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "key_drivers": {
+          "name": "key_drivers",
+          "type": "jsonb",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "confidence": {
+          "name": "confidence",
+          "type": "varchar(8)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "pool_id": {
+          "name": "pool_id",
+          "type": "varchar(128)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "token0_symbol": {
+          "name": "token0_symbol",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "token1_symbol": {
+          "name": "token1_symbol",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "protocol": {
+          "name": "protocol",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "version": {
+          "name": "version",
+          "type": "varchar(16)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "network": {
+          "name": "network",
+          "type": "varchar(32)",
+          "primaryKey": false,
+          "notNull": false
+        },
+        "created_at": {
+          "name": "created_at",
+          "type": "timestamp with time zone",
+          "primaryKey": false,
+          "notNull": false,
+          "default": "now()"
+        }
+      },
+      "indexes": {},
+      "foreignKeys": {},
+      "compositePrimaryKeys": {},
+      "uniqueConstraints": {},
+      "policies": {},
+      "checkConstraints": {},
+      "isRLSEnabled": false
+    }
+  },
+  "enums": {},
+  "schemas": {},
+  "sequences": {},
+  "roles": {},
+  "policies": {},
+  "views": {},
+  "_meta": {
+    "columns": {},
+    "schemas": {},
+    "tables": {}
+  }
+}

@@ -4,10 +4,10 @@ import { db, type NewPumpDump } from "../db/database.js";
 
 export class PumpDumpRepository {
   public async create(_pumpDump: NewPumpDump) {
-    return db.insert(pumpDump).values(_pumpDump).returning();
+    return db.insert(pumpDump).values(_pumpDump);
   }
 
-  public async findById(id: number) {
+  public async findById(id: string) {
     return db.query.pumpDump.findMany({
       where: eq(pumpDump.id, id),
     });

@@ -4,7 +4,7 @@ import { db, type NewMetrics } from "../db/database.js";
 
 export class MetricsRepository {
   public async create(_metrics: NewMetrics) {
-    return db.insert(metrics).values(_metrics).returning();
+    return db.insert(metrics).values(_metrics);
   }
 
   public async findById(id: string) {
