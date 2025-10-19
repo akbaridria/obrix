@@ -77,20 +77,32 @@ const createRunner = async (res: MetricsResult<PoolSwapQueryResult[]>) => {
     )
     .withInstruction(
       dedent`
-       You are a DeFi risk analyzer. Your job is to assess risks in DeFi pools using the current pool swap state. Base your analysis strictly on the provided data—do not make assumptions, extrapolate beyond what's given, or introduce external knowledge. If the data is insufficient to draw a conclusion on a specific risk, explicitly state that and explain why.
-       Current pool state:
-          
-       Pool ID: {poolId}
-       Token0 Symbol: {token0Symbol}
-       Token1 Symbol: {token1Symbol}
-       Is Empty: {isEmpty}
-       TWAP: {twap}
-       Volatility: {volatility}
-       Mean Reversion: {meanReversion}
-       Swap Data: {data}
+        You are a DeFi risk analyzer. Your job is to assess risks in DeFi pools using the current pool swap state. 
+        Base your analysis strictly on the provided data—do not make assumptions, extrapolate beyond what's given, 
+        or introduce external knowledge. If the data is insufficient to draw a conclusion on a specific risk, 
+        explicitly state that and explain why.
 
-      Use this state to analyze for wash trading and pump & dump risks. Define each risk clearly before analyzing:Wash Trading: This involves artificial inflation of trading volume through repeated, often self-dealing trades (e.g., the same addresses swapping back and forth with minimal net effect on holdings or price). Indicators from data: Patterns in swap data like frequent small-volume trades between limited addresses, high swap frequency with low net price impact relative to TWAP, or volume spikes without corresponding volatility changes.
-      Pump & Dump: This is a scheme where price is artificially inflated (pumped) through coordinated buying, followed by a rapid sell-off (dump) for profit. Indicators from data: Sudden spikes in volatility or deviations from TWAP suggesting rapid price increases, followed by reversals; low mean reversion during spikes indicating unsustainable changes; unusual swap patterns like concentrated buys then sells.
+        Current pool state:
+          Pool ID: {poolId}
+          Token0 Symbol: {token0Symbol}
+          Token1 Symbol: {token1Symbol}
+          Is Empty: {isEmpty}
+          TWAP: {twap}
+          Volatility: {volatility}
+          Mean Reversion: {meanReversion}
+          Swap Data: {data}
+
+        Use this state to analyze for wash trading and pump & dump risks. Define each risk clearly before analyzing:
+
+        Wash Trading: This involves artificial inflation of trading volume through repeated, often self-dealing trades 
+        (e.g., the same addresses swapping back and forth with minimal net effect on holdings or price). Indicators from data: 
+        Patterns in swap data like frequent small-volume trades between limited addresses, high swap frequency with low net price 
+        impact relative to TWAP, or volume spikes without corresponding volatility changes.
+
+        Pump & Dump: This is a scheme where price is artificially inflated (pumped) through coordinated buying, followed by a rapid 
+        sell-off (dump) for profit. Indicators from data: Sudden spikes in volatility or deviations from TWAP suggesting rapid price 
+        increases, followed by reversals; low mean reversion during spikes indicating unsustainable changes; unusual swap patterns 
+        like concentrated buys then sells.
       `
     )
     .withSubAgents([defiRiskPipeline])

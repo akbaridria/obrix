@@ -138,8 +138,8 @@ function calculateMeanReversionIndex(
       return { isSuccess: false, meanReversionIndex: 0 };
     }
 
-    const decimals0 = parseInt(pool?.token0?.decimals ?? "18");
-    const decimals1 = parseInt(pool?.token1?.decimals ?? "6");
+    const decimals0 = parseInt(pool?.token0?.decimals || "18");
+    const decimals1 = parseInt(pool?.token1?.decimals || "6");
 
     const prices = swaps.map((swap) =>
       sqrtPriceX96ToPrice(BigInt(swap.sqrtPriceX96), decimals0, decimals1)
@@ -149,21 +149,28 @@ function calculateMeanReversionIndex(
     const movingAverage = calculateMovingAverage(prices, windowSize);
 
     let crossings = 0;
-    for (let i = windowSize; i < prices.length; i++) {
+    for (let i = 1; i < movingAverage.length; i++) {
+      const priceIndex = i + windowSize - 1;
+      const prevPriceIndex = priceIndex - 1;
+
+      const currentDeviation = prices[priceIndex] - movingAverage[i];
+      const prevDeviation = prices[prevPriceIndex] - movingAverage[i - 1];
+
       if (
-        Math.sign(prices[i] - movingAverage[i - windowSize + 1]) !==
-        Math.sign(prices[i - 1] - movingAverage[i - windowSize])
+        Math.sign(currentDeviation) !== Math.sign(prevDeviation) &&
+        prevDeviation !== 0
       ) {
         crossings++;
       }
     }
 
-    const n = prices.length - windowSize + 1;
+    const n = movingAverage.length;
 
     const hurstExponent = calculateSimplifiedHurst(prices);
 
     const expectedCrossings = n / 2;
-    const crossingScore = Math.min(crossings / expectedCrossings, 2) / 2;
+    const crossingScore =
+      crossings > 0 ? Math.min(crossings / expectedCrossings, 2) / 2 : 0;
     const hurstScore = Math.max(0, 1 - 2 * hurstExponent);
     const meanReversionIndex = crossingScore * 0.6 + hurstScore * 0.4;
 
