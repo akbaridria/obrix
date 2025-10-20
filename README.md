@@ -9,6 +9,7 @@ Orbix is an automated monitoring platform for detecting suspicious trading patte
 - **Alert System:** Displays detected wash trade and pump & dump events with detailed evidence.
 
 ## How it works
+<img width="9421" height="10361" alt="obrix" src="https://github.com/user-attachments/assets/990ebf02-f2f2-4d24-9d42-8eee157bf2ec" />
 
 ## Project Structure
 
