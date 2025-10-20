@@ -20,4 +20,8 @@ export class MetricsService {
   ) {
     return this.repo.getAll(params);
   }
+
+  public async getTotalUniquePools() {
+    return this.repo.getTotalUniquePools();
+  }
 }

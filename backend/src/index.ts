@@ -16,29 +16,29 @@ app.use(compress());
 app.use(httpLogger());
 app.use(trimTrailingSlash());
 
-const uniswapV4Worker = new UniswapV4Worker();
-const worker = uniswapV4Worker.setup();
-if (worker) {
-  console.log("Uniswap V4 Worker is set up and running.");
-}
+// const uniswapV4Worker = new UniswapV4Worker();
+// const worker = uniswapV4Worker.setup();
+// if (worker) {
+//   console.log("Uniswap V4 Worker is set up and running.");
+// }
 
-LIST_UNISWAP_V4_POOLS?.filter((pool) => pool === LIST_UNISWAP_V4_POOLS[0]).forEach((poolId) => {
-  defaultQueue.upsertJobScheduler(
-    "uniswap-v4-metrics-" + poolId,
-    {
-      every: 2 * 60 * 60 * 1000,
-    },
-    {
-      data: {
-        poolId,
-      },
-      opts: {
-        attempts: 3,
-        backoff: { type: "exponential", delay: 60000 },
-      },
-    }
-  );
-});
+// LIST_UNISWAP_V4_POOLS?.filter((pool) => pool === LIST_UNISWAP_V4_POOLS[0]).forEach((poolId) => {
+//   defaultQueue.upsertJobScheduler(
+//     "uniswap-v4-metrics-" + poolId,
+//     {
+//       every: 2 * 60 * 60 * 1000,
+//     },
+//     {
+//       data: {
+//         poolId,
+//       },
+//       opts: {
+//         attempts: 3,
+//         backoff: { type: "exponential", delay: 60000 },
+//       },
+//     }
+//   );
+// });
 
 app.route("/", routes);
 

@@ -20,4 +20,8 @@ export class PumpDumpService {
   ) {
     return this.repo.getAll(params);
   }
+
+  public async getTotalAlertsEqualToOne() {
+    return this.repo.getTotalAlertsEqualToOne();
+  }
 }

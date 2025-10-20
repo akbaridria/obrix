@@ -16,6 +16,19 @@ routes.get("/", async (c) => {
   return c.text("API is running");
 });
 
+routes.get("/stats", async (c) => {
+  const totalUniquePools = await metricsService.getTotalUniquePools();
+  const totalPumpDumpAlerts = await pumpDumpService.getTotalAlertsEqualToOne();
+  const totalWashTradeAlerts =
+    await washtradeService.getTotalAlertsEqualToOne();
+
+  return c.json({
+    totalUniquePools,
+    totalPumpDumpAlerts,
+    totalWashTradeAlerts,
+  });
+});
+
 routes.get("/metrics", async (c) => {
   const page = Number(c.req.query("page") || "1");
   const limit = Number(c.req.query("limit") || "100");
@@ -23,7 +36,10 @@ routes.get("/metrics", async (c) => {
 
   const data = await metricsService.getAll({ page, limit, protocol });
 
-  return c.json(data);
+  return c.json({
+    data,
+    status: "success",
+  });
 });
 
 routes.get("/pump-dump", async (c) => {
@@ -33,7 +49,10 @@ routes.get("/pump-dump", async (c) => {
 
   const data = await pumpDumpService.getAll({ page, limit, protocol });
 
-  return c.json(data);
+  return c.json({
+    data,
+    status: "success",
+  });
 });
 
 routes.get("/wash-trade", async (c) => {
@@ -43,7 +62,10 @@ routes.get("/wash-trade", async (c) => {
 
   const data = await washtradeService.getAll({ page, limit, protocol });
 
-  return c.json(data);
+  return c.json({
+    data,
+    status: "success",
+  });
 });
 
 export default routes;
