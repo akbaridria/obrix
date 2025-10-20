@@ -19,28 +19,22 @@ export class PumpDumpRepository {
     protocol,
   }: { limit?: number; page?: number; protocol?: string } = {}) {
     const offset = (page - 1) * limit;
-    const [totalResult, data] = await Promise.all([
-      db
-        .select({ count: count() })
-        .from(pumpDump)
-        .where(protocol ? eq(pumpDump.protocol, protocol) : undefined),
-      db.query.pumpDump.findMany({
-        where: protocol ? eq(pumpDump.protocol, protocol) : undefined,
-        limit,
-        offset,
-        orderBy: (pumpDump, { desc }) => [desc(pumpDump.created_at)],
-      }),
-    ]);
+    const items = await db.query.pumpDump.findMany({
+      where: protocol ? eq(pumpDump.protocol, protocol) : undefined,
+      limit: limit + 1,
+      offset,
+      orderBy: (pumpDump, { desc }) => [desc(pumpDump.created_at)],
+    });
 
-    const total = totalResult[0]?.count ?? 0;
-    const totalPages = Math.ceil(total / limit);
+    const hasNextPage = items.length > limit;
+    const paginatedItems = items.slice(0, limit);
 
     return {
-      data,
-      total,
-      totalPages,
+      items: paginatedItems,
       page,
       limit,
+      hasNextPage,
+      hasPrevPage: page > 1,
     };
   }
 

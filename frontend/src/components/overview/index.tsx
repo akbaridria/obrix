@@ -16,6 +16,7 @@ import {
 } from "../ui/card";
 import { Popover, PopoverContent, PopoverTrigger } from "../ui/popover";
 import {
+  cn,
   getMeanReversionDescription,
   getVolatilityDescription,
 } from "../../lib/utils";
@@ -29,23 +30,21 @@ import {
   TableRow,
 } from "../ui/table";
 import { useQuery } from "@tanstack/react-query";
-import { getStats, getMetrics, queryKeys } from "@/api/metrics";
+import { getStats, getMetrics, metricsQueryKey } from "@/api/metrics";
 import type { Metrics } from "@/types";
 import {
   Pagination,
   PaginationContent,
   PaginationItem,
-  PaginationLink,
   PaginationPrevious,
   PaginationNext,
-  PaginationEllipsis,
 } from "@/components/ui/pagination";
 
 const Overview = () => {
   const [page, setPage] = React.useState(1);
-  const limit = 10;
+  const limit = 100;
   const { data: stats, isLoading: statsLoading } = useQuery({
-    queryKey: queryKeys.stats,
+    queryKey: ["stats"],
     queryFn: getStats,
   });
   const {
@@ -53,12 +52,13 @@ const Overview = () => {
     isLoading: metricsLoading,
     error: metricsError,
   } = useQuery({
-    queryKey: [...queryKeys.metrics, page, limit],
+    queryKey: metricsQueryKey(page, limit),
     queryFn: () => getMetrics(page, limit),
   });
 
   const rows: Metrics[] = metrics?.data?.items ?? [];
-  const pageCount: number = metrics?.data?.totalPages ?? 1;
+  const hasNextPage = metrics?.data?.hasNextPage ?? false;
+  const hasPrevPage = metrics?.data?.hasPrevPage ?? false;
 
   return (
     <TabsContent value="overview">
@@ -125,31 +125,31 @@ const Overview = () => {
             <Table className="min-w-full">
               <TableHeader>
                 <TableRow className="bg-muted">
-                  <TableHead className="px-4 py-2 text-left font-semibold">
+                  <TableHead className="p-4 text-left font-semibold">
                     Pool ID
                   </TableHead>
-                  <TableHead className="px-4 py-2 text-left font-semibold">
+                  <TableHead className="p-4 text-left font-semibold">
                     Protocol
                   </TableHead>
-                  <TableHead className="px-4 py-2 text-left font-semibold">
+                  <TableHead className="p-4 text-left font-semibold">
                     Chain
                   </TableHead>
-                  <TableHead className="px-4 py-2 text-left font-semibold">
+                  <TableHead className="p-4 text-left font-semibold">
                     Version
                   </TableHead>
-                  <TableHead className="px-4 py-2 text-left font-semibold">
+                  <TableHead className="p-4 text-left font-semibold">
                     Pool Name
                   </TableHead>
-                  <TableHead className="px-4 py-2 text-left font-semibold">
+                  <TableHead className="p-4 text-left font-semibold">
                     TWAP
                   </TableHead>
-                  <TableHead className="px-4 py-2 text-left font-semibold">
+                  <TableHead className="p-4 text-left font-semibold">
                     Volatility
                   </TableHead>
-                  <TableHead className="px-4 py-2 text-left font-semibold">
+                  <TableHead className="p-4 text-left font-semibold">
                     Mean Reversion
                   </TableHead>
-                  <TableHead className="px-4 py-2 text-left font-semibold">
+                  <TableHead className="p-4 text-left font-semibold">
                     Created At
                   </TableHead>
                 </TableRow>
@@ -188,18 +188,17 @@ const Overview = () => {
                         key={idx}
                         className="hover:bg-accent transition-colors"
                       >
-                        <TableCell className="p-4 max-w-[140px] truncate" title={row.pool_id}>
+                        <TableCell
+                          className="p-4 max-w-[140px] truncate"
+                          title={row.pool_id}
+                        >
                           <span className="block overflow-hidden text-ellipsis whitespace-nowrap">
                             {row.pool_id}
                           </span>
                         </TableCell>
-                        <TableCell className="p-4">
-                          {row.protocol}
-                        </TableCell>
+                        <TableCell className="p-4">{row.protocol}</TableCell>
                         <TableCell className="p-4">{row.chain}</TableCell>
-                        <TableCell className="p-4">
-                          {row.version}
-                        </TableCell>
+                        <TableCell className="p-4">{row.version}</TableCell>
                         <TableCell className="p-4">
                           {row.token0_symbol}/{row.token1_symbol}
                         </TableCell>
@@ -257,9 +256,7 @@ const Overview = () => {
                             </Popover>
                           </div>
                         </TableCell>
-                        <TableCell className="p-4">
-                          {row.created_at}
-                        </TableCell>
+                        <TableCell className="p-4">{row.created_at}</TableCell>
                       </TableRow>
                     );
                   })}
@@ -270,43 +267,26 @@ const Overview = () => {
                 <PaginationContent>
                   <PaginationItem>
                     <PaginationPrevious
-                      href="#"
+                      className={cn({
+                        "cursor-not-allowed opacity-50": metricsLoading || !hasPrevPage,
+                      })}
                       onClick={(e) => {
                         e.preventDefault();
-                        if (!metricsLoading && page > 1) setPage(page - 1);
+                        if (!metricsLoading && hasPrevPage) setPage(page - 1);
                       }}
-                      aria-disabled={metricsLoading || page === 1}
+                      aria-disabled={metricsLoading || !hasPrevPage}
                     />
                   </PaginationItem>
-                  {Array.from({ length: pageCount }).map((_, i) => (
-                    <PaginationItem key={i}>
-                      <PaginationLink
-                        href="#"
-                        isActive={page === i + 1}
-                        onClick={(e) => {
-                          e.preventDefault();
-                          if (!metricsLoading) setPage(i + 1);
-                        }}
-                        aria-disabled={metricsLoading}
-                      >
-                        {i + 1}
-                      </PaginationLink>
-                    </PaginationItem>
-                  ))}
-                  {pageCount > 5 && page < pageCount - 2 && (
-                    <PaginationItem>
-                      <PaginationEllipsis />
-                    </PaginationItem>
-                  )}
                   <PaginationItem>
                     <PaginationNext
-                      href="#"
+                      className={cn({
+                        "cursor-not-allowed opacity-50": metricsLoading || !hasNextPage,
+                      })}
                       onClick={(e) => {
                         e.preventDefault();
-                        if (!metricsLoading && page < pageCount)
-                          setPage(page + 1);
+                        if (!metricsLoading && hasNextPage) setPage(page + 1);
                       }}
-                      aria-disabled={metricsLoading || page === pageCount}
+                      aria-disabled={metricsLoading || !hasNextPage}
                     />
                   </PaginationItem>
                 </PaginationContent>

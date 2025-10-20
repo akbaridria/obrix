@@ -21,25 +21,22 @@ export class WashTradeRepository {
     const offset = (page - 1) * limit;
     const whereClause = protocol ? eq(washTrade.protocol, protocol) : undefined;
 
-    const [items, totalCountResult] = await Promise.all([
-      db.query.washTrade.findMany({
-        where: whereClause,
-        limit,
-        offset,
-        orderBy: (washTrade, { desc }) => [desc(washTrade.created_at)],
-      }),
-      db.select({ count: count() }).from(washTrade).where(whereClause),
-    ]);
+    const items = await db.query.washTrade.findMany({
+      where: whereClause,
+      limit: limit + 1,
+      offset,
+      orderBy: (washTrade, { desc }) => [desc(washTrade.created_at)],
+    });
 
-    const totalCount = totalCountResult[0]?.count ?? 0;
-    const totalPages = Math.ceil(totalCount / limit);
+    const hasNextPage = items.length > limit;
+    const paginatedItems = items.slice(0, limit);
 
     return {
-      items,
-      totalPages,
-      totalCount,
+      items: paginatedItems,
       page,
       limit,
+      hasNextPage,
+      hasPrevPage: page > 1,
     };
   }
 

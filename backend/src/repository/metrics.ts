@@ -19,29 +19,24 @@ export class MetricsRepository {
     protocol,
   }: { limit?: number; page?: number; protocol?: string } = {}) {
     const offset = (page - 1) * limit;
+    const whereClause = protocol ? eq(metrics.protocol, protocol) : undefined;
 
-    const [total, items] = await Promise.all([
-      db
-        .select({ count: countDistinct(metrics.id) })
-        .from(metrics)
-        .where(protocol ? eq(metrics.protocol, protocol) : undefined),
-      db.query.metrics.findMany({
-        where: protocol ? eq(metrics.protocol, protocol) : undefined,
-        limit,
-        offset,
-        orderBy: (metrics, { desc }) => [desc(metrics.created_at)],
-      }),
-    ]);
+    const items = await db.query.metrics.findMany({
+      where: whereClause,
+      limit: limit + 1,
+      offset,
+      orderBy: (metrics, { desc }) => [desc(metrics.created_at)],
+    });
 
-    const totalCount = total[0]?.count ?? 0;
-    const totalPages = Math.ceil(totalCount / limit);
+    const hasNextPage = items.length > limit;
+    const paginatedItems = items.slice(0, limit);
 
     return {
-      items,
-      totalPages,
-      totalCount,
+      items: paginatedItems,
       page,
       limit,
+      hasNextPage,
+      hasPrevPage: page > 1,
     };
   }
 

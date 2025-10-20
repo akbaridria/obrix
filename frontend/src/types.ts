@@ -16,10 +16,10 @@ export interface Metrics {
 export interface MetricsListResponse {
   data: {
     items: Metrics[];
-    totalPages: number;
-    totalCount: number;
     page: number;
     limit: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
   };
   status: string;
 }
@@ -49,10 +49,10 @@ export interface WashTrade {
 export interface WashTradeListResponse {
   data: {
     items: WashTrade[];
-    totalPages: number;
-    totalCount: number;
     page: number;
     limit: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
   };
   status: string;
 }
@@ -76,10 +76,10 @@ export interface PumpDump {
 export interface PumpDumpListResponse {
   data: {
     items: PumpDump[];
-    totalPages: number;
-    totalCount: number;
     page: number;
     limit: number;
+    hasNextPage: boolean;
+    hasPrevPage: boolean;
   };
   status: string;
 }
