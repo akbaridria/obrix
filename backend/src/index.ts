@@ -45,7 +45,7 @@ app.route("/", routes);
 serve(
   {
     fetch: app.fetch,
-    port: 3011,
+    port: 3012,
   },
   (info) => {
     console.log(`Server is running on http://localhost:${info.port}`);
