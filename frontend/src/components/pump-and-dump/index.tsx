@@ -34,6 +34,7 @@ import {
 import { useQuery } from "@tanstack/react-query";
 import { getPumpDump, pumpDumpQueryKey } from "@/api/pumpDump";
 import type { PumpDump } from "@/types";
+import { Badge } from "../ui/badge";
 
 const AlertDetailsDialog: React.FC<{ row: PumpDump }> = ({ row }) => {
   return (
@@ -43,7 +44,7 @@ const AlertDetailsDialog: React.FC<{ row: PumpDump }> = ({ row }) => {
           Details
         </button>
       </DialogTrigger>
-      <DialogContent>
+      <DialogContent className="!w-[800px] !max-w-[90vw] max-h-[80vh] overflow-y-scroll">
         <DialogHeader>
           <DialogTitle>Pump &amp; Dump Alert Details</DialogTitle>
           <DialogDescription>
@@ -56,7 +57,9 @@ const AlertDetailsDialog: React.FC<{ row: PumpDump }> = ({ row }) => {
               </div>
               <div>
                 <strong>Pool name:</strong>
-                <div>{row.token0_symbol}/{row.token1_symbol}</div>
+                <div>
+                  {row.token0_symbol}/{row.token1_symbol}
+                </div>
               </div>
               <div>
                 <strong>Chain:</strong> {row.network}
@@ -66,7 +69,7 @@ const AlertDetailsDialog: React.FC<{ row: PumpDump }> = ({ row }) => {
               </div>
               <div>
                 <strong>Probability:</strong>{" "}
-                {(row.pump_dump_probability * 100).toFixed(2)}%
+                <Badge>{(row.pump_dump_probability * 100).toFixed(2)}%</Badge>
               </div>
               <div>
                 <strong>Confidence:</strong> {row.confidence}
@@ -137,20 +140,40 @@ const PumpAndDump = () => {
             <Table className="min-w-full">
               <TableHeader>
                 <TableRow className="bg-muted">
-                  <TableHead className="p-4 text-left font-semibold">Pool</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Protocol</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Chain</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Version</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Probability</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Confidence</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Created At</TableHead>
-                  <TableHead className="p-4 text-left font-semibold sticky right-0 bg-input z-1">Details</TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Pool
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Protocol
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Chain
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Version
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Pool Name
+                  </TableHead>{" "}
+                  {/* Added */}
+                  <TableHead className="p-4 text-left font-semibold">
+                    Probability
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Confidence
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Created At
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold sticky right-0 bg-input z-1">
+                    Details
+                  </TableHead>
                 </TableRow>
               </TableHeader>
               <TableBody>
                 {isLoading && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-left py-8">
+                    <TableCell colSpan={8} className="text-left py-8">
                       Loading...
                     </TableCell>
                   </TableRow>
@@ -158,7 +181,7 @@ const PumpAndDump = () => {
                 {error && (
                   <TableRow>
                     <TableCell
-                      colSpan={7}
+                      colSpan={8}
                       className="text-center py-8 text-destructive"
                     >
                       Error loading pump &amp; dump data
@@ -167,7 +190,7 @@ const PumpAndDump = () => {
                 )}
                 {!isLoading && !error && rows.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-left py-8">
+                    <TableCell colSpan={8} className="text-left py-8">
                       No data
                     </TableCell>
                   </TableRow>
@@ -192,7 +215,12 @@ const PumpAndDump = () => {
                       <TableCell className="p-4">{row.network}</TableCell>
                       <TableCell className="p-4">{row.version}</TableCell>
                       <TableCell className="p-4">
-                        {(row.pump_dump_probability * 100).toFixed(2)}%
+                        {row.token0_symbol}/{row.token1_symbol}
+                      </TableCell>
+                      <TableCell className="p-4">
+                        <Badge>
+                          {(row.pump_dump_probability * 100).toFixed(2)}%
+                        </Badge>
                       </TableCell>
                       <TableCell className="p-4">{row.confidence}</TableCell>
                       <TableCell className="p-4">{row.created_at}</TableCell>

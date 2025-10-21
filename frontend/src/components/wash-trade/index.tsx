@@ -52,13 +52,28 @@ const WashTrading = () => {
             <Table className="min-w-full">
               <TableHeader>
                 <TableRow className="bg-muted">
-                  <TableHead className="p-4 text-left font-semibold">Pool</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Protocol</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Chain</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Version</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Probability</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Confidence</TableHead>
-                  <TableHead className="p-4 text-left font-semibold">Created At</TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Pool
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Protocol
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Chain
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Version
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Pool Name
+                  </TableHead>{" "}
+                  {/* Added */}
+                  <TableHead className="p-4 text-left font-semibold">
+                    Probability
+                  </TableHead>
+                  <TableHead className="p-4 text-left font-semibold">
+                    Confidence
+                  </TableHead>
                   <TableHead
                     className="p-4 text-left font-semibold"
                     style={{
@@ -75,7 +90,7 @@ const WashTrading = () => {
               <TableBody>
                 {isLoading && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-left py-8">
+                    <TableCell colSpan={8} className="text-left py-8">
                       Loading...
                     </TableCell>
                   </TableRow>
@@ -83,7 +98,7 @@ const WashTrading = () => {
                 {error && (
                   <TableRow>
                     <TableCell
-                      colSpan={7}
+                      colSpan={8}
                       className="text-center py-8 text-destructive"
                     >
                       Error loading wash trade data
@@ -92,7 +107,7 @@ const WashTrading = () => {
                 )}
                 {!isLoading && !error && rows.length === 0 && (
                   <TableRow>
-                    <TableCell colSpan={7} className="text-left py-8">
+                    <TableCell colSpan={8} className="text-left py-8">
                       No data
                     </TableCell>
                   </TableRow>
@@ -117,10 +132,14 @@ const WashTrading = () => {
                       <TableCell className="p-4">{row.network}</TableCell>
                       <TableCell className="p-4">{row.version}</TableCell>
                       <TableCell className="p-4">
-                        {(row.wash_trading_probability * 100).toFixed(2)}%
+                        {row.token0_symbol}/{row.token1_symbol}
+                      </TableCell>
+                      <TableCell className="p-4">
+                        <Badge>
+                          {(row.wash_trading_probability * 100).toFixed(2)}%
+                        </Badge>
                       </TableCell>
                       <TableCell className="p-4">{row.confidence}</TableCell>
-                      <TableCell className="p-4">{row.created_at}</TableCell>
                       <TableCell className="p-4 sticky right-0 bg-input z-1">
                         <AlertDetailsDialog row={row} />
                       </TableCell>
@@ -168,6 +187,7 @@ import {
   DialogDescription,
   DialogClose,
 } from "../ui/dialog";
+import { Badge } from "../ui/badge";
 
 const AlertDetailsDialog: React.FC<{ row: WashTrade }> = ({ row }) => {
   return (
@@ -177,11 +197,11 @@ const AlertDetailsDialog: React.FC<{ row: WashTrade }> = ({ row }) => {
           Details
         </button>
       </DialogTrigger>
-      <DialogContent className="max-w-2xl">
+      <DialogContent className="!w-[800px] !max-w-[90vw] max-h-[80vh] overflow-y-scroll">
         <DialogHeader>
           <DialogTitle>Wash Trade Alert Details</DialogTitle>
           <DialogDescription>
-            <div className="space-y-2 mt-2 max-w-2xl">
+            <div className="space-y-2 mt-2 max-w-2xl max-h-full overflow-y-scroll">
               <div>
                 <strong>Pool:</strong>
                 <div
@@ -197,7 +217,9 @@ const AlertDetailsDialog: React.FC<{ row: WashTrade }> = ({ row }) => {
               </div>
               <div>
                 <strong>Pool name:</strong>
-                <div>{row.token0_symbol}/{row.token1_symbol}</div>
+                <div>
+                  {row.token0_symbol}/{row.token1_symbol}
+                </div>
               </div>
               <div>
                 <strong>Chain:</strong>
@@ -209,7 +231,9 @@ const AlertDetailsDialog: React.FC<{ row: WashTrade }> = ({ row }) => {
               </div>
               <div>
                 <strong>Probability:</strong>{" "}
-                {(row.wash_trading_probability * 100).toFixed(2)}%
+                <Badge>
+                  {(row.wash_trading_probability * 100).toFixed(2)}%
+                </Badge>
               </div>
               <div>
                 <strong>Confidence:</strong>
@@ -223,11 +247,7 @@ const AlertDetailsDialog: React.FC<{ row: WashTrade }> = ({ row }) => {
                 <strong>Suspicious Addresses:</strong>{" "}
                 <ul className="list-disc pl-4">
                   {row.suspicious_addresses.map((addr, i) => (
-                    <li
-                      key={i}
-                      className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[400px]"
-                      title={addr}
-                    >
+                    <li key={i} title={addr}>
                       {addr}
                     </li>
                   ))}
@@ -237,12 +257,7 @@ const AlertDetailsDialog: React.FC<{ row: WashTrade }> = ({ row }) => {
                 <strong>Transaction Hashes:</strong>{" "}
                 <ul className="list-disc pl-4">
                   {row.transaction_hashes.map((tx, i) => (
-                    <li
-                      key={i}
-                      className="overflow-hidden text-ellipsis whitespace-nowrap max-w-[400px]"
-                    >
-                      {tx}
-                    </li>
+                    <li key={i}>{tx}</li>
                   ))}
                 </ul>
               </div>
