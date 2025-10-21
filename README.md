@@ -8,6 +8,18 @@ Orbix is an automated monitoring platform for detecting suspicious trading patte
 - **Metrics Dashboard:** Monitors pool metrics such as TWAP, volatility, and mean reversion.
 - **Alert System:** Displays detected wash trade and pump & dump events with detailed evidence.
 
+## Who Is This Data For?
+
+Orbix’s real-time risk insights can be leveraged by a variety of users:
+
+- **Researchers:** Analyze DeFi pool behavior and market manipulation patterns for academic or industry studies.
+- **Trading Bots:** Integrate risk signals to avoid suspicious pools and optimize trading strategies.
+- **Insurance Companies:** Assess pool risk to calculate fair premiums and detect early signs of problematic pools.
+- **Protocol Developers:** Monitor pool health and respond to emerging threats.
+- **Regulators & Auditors:** Gain visibility into market integrity and compliance risks.
+
+Orbix empowers anyone seeking deeper transparency and actionable intelligence in DeFi trading environments.
+
 ## How it works
 <img width="9421" height="10361" alt="obrix" src="https://github.com/user-attachments/assets/990ebf02-f2f2-4d24-9d42-8eee157bf2ec" />
 
